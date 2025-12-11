@@ -58,7 +58,6 @@ router.post('/add-workout', requireLogin, async (req, res) => {
 // 2. LOGS ROUTE - VIEW ALL WORKOUTS
 // ===============================================
 
-// GET /logs - Show workouts for the logged-in user
 router.get('/logs', requireLogin, async (req, res) => {
   const pool = req.app.locals.pool;
 
@@ -92,7 +91,6 @@ router.get('/logs', requireLogin, async (req, res) => {
 // 3. EDIT WORKOUT ROUTES
 // ===============================================
 
-// GET /workouts/:id/edit - Show edit form
 router.get('/workouts/:id/edit', requireLogin, async (req, res) => {
   const pool = req.app.locals.pool;
   const workoutId = req.params.id;
@@ -135,8 +133,9 @@ router.post('/workouts/:id/edit', requireLogin, async (req, res) => {
       [workout_date, type, duration_minutes, notes, workoutId, req.session.userId]
     );
 
-    // After saving, go back to logs
-    res.redirect('/logs');
+    // ✅ FIXED REDIRECT
+    const base = process.env.HEALTH_BASE_PATH || '/usr/428/';
+    res.redirect(`${base}logs`);
   } catch (error) {
     console.error('❌ Error updating workout:', error);
     res.status(500).send('Error updating workout');
@@ -147,7 +146,6 @@ router.post('/workouts/:id/edit', requireLogin, async (req, res) => {
 // 4. DELETE WORKOUT ROUTE
 // ===============================================
 
-// POST /workouts/:id/delete - Delete a workout
 router.post('/workouts/:id/delete', requireLogin, async (req, res) => {
   const pool = req.app.locals.pool;
   const workoutId = req.params.id;
@@ -159,7 +157,9 @@ router.post('/workouts/:id/delete', requireLogin, async (req, res) => {
       [workoutId, req.session.userId]
     );
 
-    res.redirect('/logs');
+    // ✅ FIXED REDIRECT
+    const base = process.env.HEALTH_BASE_PATH || '/usr/428/';
+    res.redirect(`${base}logs`);
   } catch (error) {
     console.error('❌ Error deleting workout:', error);
     res.status(500).send('Error deleting workout');
