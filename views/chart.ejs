@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <h2>Total Calories by Workout Type (Advanced Technique: Dynamic Charting)</h2>
+        <p>This visualization uses asynchronous JavaScript (Fetch API) to retrieve aggregated data from the server's API endpoint and renders it using a client-side library (Chart.js).</p>
+        
+        <div style="width: 70%; margin: 30px auto;">
+            <canvas id="caloriesChart"></canvas>
+        </div>
+        
+        <script>
+            // Client-side Fetch/AJAX Request (Advanced Technique)
+            fetch('/api/chart-data')
+                .then(response => response.json())
+                .then(data => {
+                    // Process data for Chart.js
+                    const labels = data.map(item => item.workout_type);
+                    const totals = data.map(item => item.total_calories);
+
+                    const ctx = document.getElementById('caloriesChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar', // Simple bar chart visualization
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Total Calories Burned (kcal)',
+                                data: totals,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.6)',
+                                    'rgba(54, 162, 235, 0.6)',
+                                    'rgba(255, 206, 86, 0.6)',
+                                    'rgba(75, 192, 192, 0.6)'
+                                ],
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Calories Burned (kcal)'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error creating chart:', error));
+        </script>
+
+    </main>
+    <%- include('partials/footer') %>
+</body>
+</html>
