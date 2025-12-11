@@ -64,7 +64,7 @@ router.get('/logs', requireLogin, async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      `SELECT workout_date, type, duration_minutes, notes
+      `SELECT id, workout_date, type, duration_minutes, notes
        FROM Workout
        WHERE user_id = ?
        ORDER BY workout_date DESC`,
@@ -89,15 +89,91 @@ router.get('/logs', requireLogin, async (req, res) => {
 });
 
 // ===============================================
-// 3. CHARTS ROUTE - DATA VISUALISATION
+// 3. EDIT WORKOUT ROUTES
 // ===============================================
 
-// GET /charts - Display summary chart of workouts
+// GET /workouts/:id/edit - Show edit form
+router.get('/workouts/:id/edit', requireLogin, async (req, res) => {
+  const pool = req.app.locals.pool;
+  const workoutId = req.params.id;
+
+  try {
+    const [rows] = await pool.query(
+      `SELECT id, workout_date, type, duration_minutes, notes
+       FROM Workout
+       WHERE id = ? AND user_id = ?`,
+      [workoutId, req.session.userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).send('Workout not found');
+    }
+
+    res.render('edit_workout', {
+      pageTitle: 'Edit Workout',
+      username: req.session.username,
+      workout: rows[0],
+      error: null,
+    });
+  } catch (error) {
+    console.error('❌ Error loading workout for edit:', error);
+    res.status(500).send('Error loading workout');
+  }
+});
+
+// POST /workouts/:id/edit - Save edited workout
+router.post('/workouts/:id/edit', requireLogin, async (req, res) => {
+  const pool = req.app.locals.pool;
+  const workoutId = req.params.id;
+  const { workout_date, type, duration_minutes, notes } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE Workout
+       SET workout_date = ?, type = ?, duration_minutes = ?, notes = ?
+       WHERE id = ? AND user_id = ?`,
+      [workout_date, type, duration_minutes, notes, workoutId, req.session.userId]
+    );
+
+    // After saving, go back to logs
+    res.redirect('/logs');
+  } catch (error) {
+    console.error('❌ Error updating workout:', error);
+    res.status(500).send('Error updating workout');
+  }
+});
+
+// ===============================================
+// 4. DELETE WORKOUT ROUTE
+// ===============================================
+
+// POST /workouts/:id/delete - Delete a workout
+router.post('/workouts/:id/delete', requireLogin, async (req, res) => {
+  const pool = req.app.locals.pool;
+  const workoutId = req.params.id;
+
+  try {
+    await pool.query(
+      `DELETE FROM Workout
+       WHERE id = ? AND user_id = ?`,
+      [workoutId, req.session.userId]
+    );
+
+    res.redirect('/logs');
+  } catch (error) {
+    console.error('❌ Error deleting workout:', error);
+    res.status(500).send('Error deleting workout');
+  }
+});
+
+// ===============================================
+// 5. CHARTS ROUTE - DATA VISUALISATION
+// ===============================================
+
 router.get('/charts', requireLogin, async (req, res) => {
   const pool = req.app.locals.pool;
 
   try {
-    // Aggregate total workout duration per type
     const [rows] = await pool.query(
       `SELECT type, SUM(duration_minutes) AS total_duration
        FROM Workout
