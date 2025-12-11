@@ -30,10 +30,9 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'A_STRONG_FALLBACK_SECRET_KEY',
     resave: false,
     saveUninitialized: false,
-    // Note: secure: false is appropriate for the non-HTTPS VM deployment
 }));
 
-// 4. Database Connection Pool Setup (using the environment variables)
+// 4. Database Connection Pool Setup 
 const mysql = require('mysql2/promise');
 const pool = mysql.createPool({
     host: process.env.HEALTH_HOST,
@@ -78,5 +77,5 @@ app.use('/', workoutRoutes);
 // 7. Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Deployed URL Base: ${process.env.HEALTH_BASE_PATH}`);
+    // Note: The app is accessible via the Goldsmiths proxy URL.
 });
