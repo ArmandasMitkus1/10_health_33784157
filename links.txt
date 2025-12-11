@@ -2,5 +2,5 @@ home=https://www.doc.gold.ac.uk/usr/428/
 about=https://www.doc.gold.ac.uk/usr/428/about
 register=https://www.doc.gold.ac.uk/usr/428/register
 login=https://www.doc.gold.ac.uk/usr/428/login
-add_workout=https://www.doc.gold.ac.uk/usr/428/add-workout
+add-workout=https://www.doc.gold.ac.uk/usr/428/add-workout
 logs=https://www.doc.gold.ac.uk/usr/428/logs
