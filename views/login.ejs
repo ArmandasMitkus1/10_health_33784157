@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('partials/head') %>
+    <%- include('head.ejs') %>
 </head>
 <body>
+    <%- include('header.ejs') %>
     <main class="login-container">
-        <h2>Login to your Fitness Tracker</h2>
-
-        <% if (errorMessage) { %>
-            <p class="error-message"><%= errorMessage %></p>
+        <h2>Login</h2>
+        
+        <% if (error) { %>
+            <div class="error-message"><%= error %></div>
         <% } %>
 
         <form action="/login" method="POST">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" placeholder="gold" required>
+            <input type="text" id="username" name="username" required>
 
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="smiths or smiths123ABC$" required>
+            <input type="password" id="password" name="password" required>
 
-            <button type="submit">Log In</button>
+            <button type="submit" class="button-primary">Log In</button>
         </form>
-
     </main>
-    <%- include('partials/footer') %>
+    <%- include('footer.ejs') %>
 </body>
 </html>
