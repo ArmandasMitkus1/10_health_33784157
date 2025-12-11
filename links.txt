@@ -1,1 +1,6 @@
-
+home=https://www.doc.gold.ac.uk/ssh/428/
+about=https://www.doc.gold.ac.uk/ssh/428/about
+login_page=https://www.doc.gold.ac.uk/ssh/428/login
+add_workout_form=https://www.doc.gold.ac.uk/ssh/428/add-workout
+search_logs=https://www.doc.gold.ac.uk/ssh/428/logs
+advanced_chart=https://www.doc.gold.ac.uk/ssh/428/charts
