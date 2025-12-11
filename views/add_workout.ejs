@@ -9,7 +9,8 @@
   <% if (error) { %><p style="color:red;"><%= error %></p><% } %>
   <% if (success) { %><p style="color:green;"><%= success %></p><% } %>
 
-  <form method="POST" action="/add_workout">
+  <!-- FIXED ACTION HERE -->
+  <form method="POST" action="/add-workout">
     <label>Date:</label>
     <input type="date" name="workout_date" required><br><br>
 
